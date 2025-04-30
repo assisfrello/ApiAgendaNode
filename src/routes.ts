@@ -2,12 +2,15 @@ import { FastifyInstance, FastifyPluginOptions, FastifyRequest, FastifyReply } f
 import { AgendaController } from "./controllers/AgendaController";
 
 export async function routes(fastify: FastifyInstance, options: FastifyPluginOptions) {
-    
-    fastify.get("/teste", async (request: FastifyRequest, repply: FastifyReply) => {
-        return { ok: true }
-    })
-
     fastify.get("/agenda", async (request: FastifyRequest, repply: FastifyReply) => {
         return new AgendaController().handle(request, repply);
     })
+
+    fastify.post('/agenda', async (request, reply) => {
+        return new AgendaController().create(request, reply);
+    });
+
+    fastify.delete("/agenda/:documento", async (request, reply) => {
+        return new AgendaController().delete(request, reply);
+    });
 }
