@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model agenda {
+  id               BigInt             @id @default(autoincrement())
+  documento        String?            @db.VarChar(14)
+  nome             String?            @db.VarChar(100)
+  agenda_contatos  agenda_contatos[]
+  agenda_enderecos agenda_enderecos[]
+}
+
+model agenda_contatos {
+  id        BigInt  @id @default(autoincrement())
+  celular   String? @db.VarChar(20)
+  email     String? @db.VarChar(100)
+  telefone  String? @db.VarChar(20)
+  agenda_id BigInt
+  agenda    agenda  @relation(fields: [agenda_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_agenda_contatos_agenda")
+}
+
+model agenda_enderecos {
+  id          BigInt  @id @default(autoincrement())
+  logradouro  String? @db.VarChar(200)
+  numero      String? @db.VarChar(5)
+  complemento String? @db.VarChar(200)
+  bairro      String? @db.VarChar(100)
+  cidade      String? @db.VarChar(100)
+  uf          String? @db.VarChar(2)
+  agenda_id   BigInt
+  agenda      agenda  @relation(fields: [agenda_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_agenda_enderecos_agenda")
+}
